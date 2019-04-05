@@ -17,6 +17,7 @@ alibaba_Skrapy
 .idea/**/dictionaries
 .idea/**/shelf
 .idea/*.xml
+*/__pycache__
 
 # Generated files
 .idea/**/contentModel.xml
