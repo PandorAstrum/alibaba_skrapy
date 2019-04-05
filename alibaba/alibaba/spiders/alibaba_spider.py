@@ -1,15 +1,30 @@
 # -*- coding: utf-8 -*-
-import scrapy
-from parameters import *
+# from parameters import *
+from scrapy import Spider
 
-class AlibabaSpiderSpider(scrapy.Spider):
-    name = 'alibaba-spider'
-    allowed_domains = ['alibaba.com']
-    start_urls = URLS
+
+class AlibabaSpiderSpider(Spider):
+
+    def __init__(self, **kwargs):
+        super(AlibabaSpiderSpider, self).__init__(**kwargs)
+        self.allowed_domains = ['alibaba.com']
+        self.name = 'alibaba-spider'
+        self.start_urls = kwargs.get("urls")
 
     def parse(self, response):
         # first parse for url link
-        pass
+        links = response.xpath('//div[@class="product-info"]/div[@class="title"]/a/@href').extract()
+        # process and remove extra links
+        for i in range(0, 8):
+            links.pop(0)
+
+        for j in links:
+            print(j)
+        # next
+        next_page_url = response.xpath('//link[@rel="next"]/@href').extract_first()
+        if next_page_url:
+            yield response.follow(next_page_url)
+
 
     def parse2(self, response):
         # scrap from those url links
