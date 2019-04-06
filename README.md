@@ -4,64 +4,96 @@
 [![Python Version][python-image]][python-url]
 [![Scrapy Version][scrapy-image]][scrapy-url]
 
-One to two paragraph statement about your product and what it does.
+This Repo is using various technique to scrap data from alibaba and
+download product images. Also it outputs csv file from where it can be
+converted to proper xml for uploading into any website via plugins or
+another means.
 
 
 ## Installation & Setup
+NOTE: Before anything, you should have Python 3 installed (preferable 3.6)
+
+Download:
+- [PYTHON](https://www.python.org/)
+- [VS CODE](https://code.visualstudio.com/) for code editing but can be used any text editor like NOTEPAD
+
+
+ Open up a command line tools and type:
+
 
 Linux (terminal or bash):
 
 ```bash
-npm install my-crazy-module --save
+git clone https://github.com/PandorAstrum/alibaba_skrapy.git
 pip install -r requirements.txt
 ```
 Windows (cmd):
 
 ```CMD
-npm install my-crazy-module --save
+git clone https://github.com/PandorAstrum/alibaba_skrapy.git
 pip install -r requirements.txt
 ```
 
-Download (Extras): 
-- [NPM](https://www.npmjs.com/get-npm)
-- [VS CODE](https://code.visualstudio.com/)
+## Folder Structure
 
-## Usage example
+(project root folder)
 
-A few motivating and useful examples of how your product can be used. Spice this up with code blocks and potentially more screenshots.
+    ├── alibaba(folder)                 # contains the scrapper
+    │   ├── spiders(folder)             # spider folder
+    │   │   └── alibaba_spiders.py      # the main spider
+    │   │
+    │   ├── exporter.py                 # custom exporter for csv and xml
+    │   ├── items.py                    # items to scrap
+    │   ├── middlewares.py              # middlewares for the scrapper
+    │   ├── pipelines.py                # pre processing stage
+    │   └── settings.py                 # core settings fro the spider
+    │
+    ├── downlaod_image.py               # contains logic for downloading image
+    ├── parameters.py                   # tweakable exposed parameter for the spider
+    └── run.py                          # main file to run (runs the spider)
 
-To compile the project run:
+## Example Usage
+- on the cmd or bash cd to folder where this repo is downloaded and extracted
+- then type:
 ```
-truffle compile
+python run.py
 ```
+It will start running the scrapper and upon finish you can check the root project folder for the output file
 
-To migrate the project run:
+- to download images type:
 ```
-truffle migrate
+python download_image.py
 ```
+## Tweak
+* in the parameters.py
 
-To test the project run:
+**URLS**
+```cs
+This is a list of urls that the spider will scrap from alibaba
 ```
-truffle test
+Change it according to your needs (one or many)
+<br>
+
+**OUTPUT_FILENAME**
+```cs
+This is the file name that will be written along with date upon scrapping finish
 ```
+Change the name according to your needs
+<br>
 
-_For more examples and usage, please refer to the [ReadTheDoc][ReadTheDoc]._
-
+**CSV_FILE_FOR_IMAGE_DOWNLOAD**
+```cs
+This is the file name of scrapped csv file with full path to get the
+list of image links for download
+```
+e.g: "C:\\Users\\Username\\Desktop\\project\\scrapped_Apr_05_2019_15_41_32.csv"
+NOTE: dont forget the double slash to escape characters in python
+<br>
 
 ## Release History
 
-* 0.2.1
-    * CHANGE: Update docs (module code remains unchanged)
-* 0.2.0
-    * CHANGE: Remove `setDefaultXYZ()`
-    * ADD: Add `init()`
-* 0.1.1
-    * FIX: Crash when calling `baz()` (Thanks @GenerousContributorName!)
-* 0.1.0
-    * The first proper release
-    * CHANGE: Rename `foo()` to `bar()`
-* 0.0.1
-    * Work in progress
+* 1.0
+    * simple scrapper along with image downloader
 
 ## Meta
 
@@ -69,11 +101,11 @@ Ashiquzzaman Khan – [@dreadlordn](https://twitter.com/dreadlordn)
 
 Distributed under the MIT license. See ``LICENSE`` for more information.
 
-[https://github.com/PandorAstrum/Readme_Template](https://github.com/PandorAstrum/Readme_Template)
+[https://github.com/PandorAstrum/alibaba_skrapy](https://github.com/PandorAstrum/alibaba_skrapy)
 
 ## Contributing
 
-1. Fork it (<https://github.com/PandorAstrum/Readme_Template/fork>)
+1. Fork it (<https://github.com/PandorAstrum/alibaba_skrapy>)
 2. Create your feature branch (`git checkout -b feature/fooBar`)
 3. Commit your changes (`git commit -am 'Add some fooBar'`)
 4. Push to the branch (`git push origin feature/fooBar`)

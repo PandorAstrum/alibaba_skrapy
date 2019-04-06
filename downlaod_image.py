@@ -36,7 +36,3 @@ for p in pics_list:
     else:
         download(p)
     image_remain -= 1
-
-
-# url = 'http://google.com/favicon.ico'
-#
