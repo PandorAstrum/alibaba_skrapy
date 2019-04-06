@@ -9,7 +9,8 @@ import os
 import six
 import csv
 
-from scrapy.contrib.exporter import CsvItemExporter
+# from scrapy.contrib.exporter import CsvItemExporter
+from scrapy.exporters import CsvItemExporter
 from scrapy.extensions.feedexport import IFeedStorage
 from w3lib.url import file_uri_to_path
 from zope.interface import implementer

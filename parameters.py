@@ -16,7 +16,7 @@ __all__ = [
 	"XPATH_PRODUCT_LINK",
 	"get_output_filename",
 	"USER_AGENTS",
-
+	"CSV_FILE_FOR_IMAGE_DOWNLOAD"
 ]
 
 # put urls here one each line with commas
@@ -31,7 +31,7 @@ RANDOMIZE_DOWNLOAD_TIME = True
 RANDOMIZE_HEADER = True
 
 XPATH_PRODUCT_LINK = '//div[@class="product-info"]/div[@class="title"]/a/@href'
-
+CSV_FILE_FOR_IMAGE_DOWNLOAD = 'C:\\Users\\Ana Ash\\Desktop\\skrapy2\\project\\scrapped_Apr_06_2019_15_41_32.csv'
 
 def get_curr_date_time(strft="%b_%d_%Y_%H_%M_%S"):
 	return datetime.now().strftime(strft)

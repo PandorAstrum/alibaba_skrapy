@@ -9,7 +9,7 @@ It is called from command line (CMD in Windows or BASH on LINUX)
 import sys
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
-from alibaba.alibaba.spiders import alibaba_spiders
+from alibaba.spiders import alibaba_spiders
 from parameters import *
 
 sys.path.append('.\\alibaba\\alibaba\\spiders\\')
