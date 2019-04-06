@@ -115,8 +115,8 @@ Distributed under the MIT license. See ``LICENSE`` for more information.
 [python-image]: https://img.shields.io/badge/Python-3.6-yellowgreen.svg?style=flat-square
 [python-url]: https://www.python.org/
 
-[scrapy-image]: https://img.shields.io/npm/v/datadog-metrics.svg?style=flat-square
-[scrapy-url]: https://www.npmjs.com/
+[scrapy-image]: https://img.shields.io/badge/scrapy-1.6-orange.svg?style=flat-square
+[scrapy-url]: https://scrapy.org/
 
 [travis-image]: https://travis-ci.org/PandorAstrum/_vault.svg?branch=master
 [travis-url]: https://travis-ci.org/PandorAstrum/_vault
