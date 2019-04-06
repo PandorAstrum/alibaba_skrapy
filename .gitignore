@@ -19,6 +19,8 @@ alibaba_Skrapy
 .idea/*.xml
 */__pycache__
 *.jpg
+*.png
+*.gif
 
 # Generated files
 .idea/**/contentModel.xml
