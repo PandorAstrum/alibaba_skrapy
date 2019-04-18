@@ -14,7 +14,8 @@ __all__ = [
 	"URLS",
 	"get_output_filename",
 	"USER_AGENTS",
-	"CSV_FILE_FOR_IMAGE_DOWNLOAD"
+	"CSV_FILE_FOR_IMAGE_DOWNLOAD",
+	"TAKE_CATEGORIES"
 ]
 
 
@@ -23,13 +24,13 @@ USER_AGENTS = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHT
 
 RANDOMIZE_DOWNLOAD_TIME = True
 RANDOMIZE_HEADER = True
-
+TAKE_CATEGORIES = False
 
 # EDITABLE FROM HERE ==========================================================================
 URLS = [
 	"https://proinvest.trustpass.alibaba.com/productlist.html"
 ]
-OUTPUT_FILENAME = "scrapped"
+OUTPUT_FILENAME = "fixed"
 CSV_FILE_FOR_IMAGE_DOWNLOAD = ''
 
 

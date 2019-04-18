@@ -25,7 +25,7 @@ def main():
 		'LOG_LEVEL': 'INFO',
 	})
 	# _project_settings.update()
-	process.crawl(alibaba_spiders.AlibabaSpidersSpider, _start_urls=URLS, _headers=USER_AGENTS)
+	process.crawl(alibaba_spiders.AlibabaSpidersSpider, _start_urls=URLS, _headers=USER_AGENTS, _take_categories=TAKE_CATEGORIES)
 
 	process.start()  # the script will block here until the crawling is finished
 

@@ -94,5 +94,5 @@ FEED_EXPORTERS = {
     'csv': 'alibaba.exporter.FixLineCsvItemExporter',
 }
 
-LOG_LEVEL = 'INFO'
+# LOG_LEVEL = 'INFO'
 # DELTAFETCH_RESET=True

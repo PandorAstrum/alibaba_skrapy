@@ -11,13 +11,12 @@ import scrapy
 class AlibabaItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
-    product_name = scrapy.Field()
+    title = scrapy.Field()
     price = scrapy.Field()
-    category = scrapy.Field()
     min_order = scrapy.Field()
-    quick_details = scrapy.Field()
+    short_description = scrapy.Field()
     supply_ability = scrapy.Field()
     packaging_delivery = scrapy.Field()
-    product_description = scrapy.Field()
+    description = scrapy.Field()
     url = scrapy.Field()
     images_links = scrapy.Field()

@@ -8,7 +8,8 @@
 __pycache__
 *.py[cod]
 alibaba_Skrapy
-*.csv
+build
+dist
 
 # User-specific stuff
 .idea/**/workspace.xml
@@ -21,6 +22,8 @@ alibaba_Skrapy
 *.jpg
 *.png
 *.gif
+*.csv
+*.txt
 
 # Generated files
 .idea/**/contentModel.xml
