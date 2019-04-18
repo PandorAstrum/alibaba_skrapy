@@ -19,6 +19,7 @@ except ImportError:
     import tkinter.ttk as ttk
     py3 = True
 
+
 def set_Tk_var():
     global Put_URL_here
     Put_URL_here = tk.StringVar()
@@ -26,6 +27,9 @@ def set_Tk_var():
     che57 = tk.BooleanVar()
     global useragentsvar
     useragentsvar = tk.StringVar(value="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.3")
+    global delay
+    delay = tk.IntVar(0)
+
 
 def init(top, gui, *args, **kwargs):
     global w, top_level, root
