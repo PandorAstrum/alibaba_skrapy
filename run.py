@@ -20,7 +20,15 @@ def get_output_filename(_name="", extension="csv"):
 	return f"{_name}_{get_curr_date_time()}.{extension}"
 
 
-def crawl(_output, _delay, _urls, _header, _category_check):
+def get_pandas_column(_filepath, _column_name, csv=True):
+	if csv:
+		df = pd.read_csv(_filepath)
+	else:
+		df = pd.read_excel(_filepath)
+	return df[_column_name]
+
+
+def crawl(_output, _delay, _urls, _header, _category_check, _prev, _previous_list):
 	_project_settings = get_project_settings()
 	crawler = CrawlerProcess(_project_settings)
 	crawler.settings.update({
@@ -30,7 +38,7 @@ def crawl(_output, _delay, _urls, _header, _category_check):
 		"DELAY": _delay
 	})
 	crawler.crawl(alibaba_spiders.AlibabaSpidersSpider, _start_urls=_urls, _headers=_header,
-				_category_check=_category_check)
+				_category_check=_category_check, _previous_list=_previous_list, _prev=_prev)
 	crawler.start()  # the script will block here until the crawling is finished
 
 
@@ -43,25 +51,29 @@ def run_scrapper(**kwargs):
 	_delay = kwargs.get("delay")
 	_category_check = kwargs.get("category_check")
 	_update_fn = kwargs.get("update_fn")
+	_previous_csv = kwargs.get("previous_csv")
 	# preprocess parameters
 	output = get_output_filename(_name=_output_dir + "/" + _output_file_name)
+
+	if _previous_csv is None:
+		_prev = False
+		_previous_list = []
+	else:
+		_prev = True
+		_previous_list = get_pandas_column(_previous_csv, "url")
+
 	_update_fn(_str="Scrapping Data")
-	process = Process(target=crawl, args=(output, _delay, _urls, _header, _category_check))
+	process = Process(target=crawl, args=(output, _delay, _urls, _header, _category_check, _prev, _previous_list))
 	process.start()
 	process.join()
 
 
 def download_image(_fn, _csv_file, _output_folder):
 	# custom methods
-	def get_pandas_column(_filepath, _column_name, csv=True):
-		if csv:
-			df = pd.read_csv(_filepath)
-		else:
-			df = pd.read_excel(_filepath)
-		return df[_column_name]
 
-	def download(url, _dir):
+	def download(url, _dir, index):
 		filename = url.split('/')[-1]
+		filename = str(index) + "." + filename
 		filename = _dir + filename
 		r = requests.get(url, allow_redirects=True)
 		open(filename, 'wb').write(r.content)
@@ -83,7 +95,7 @@ def download_image(_fn, _csv_file, _output_folder):
 		if "," in pic:
 			tmp_pics_list = pic.split(',')
 			for t in tmp_pics_list:
-				download(t, _output_dir)
+				download(t, _output_dir, indx)
 		else:
-			download(pic, _output_dir)
+			download(pic, _output_dir, indx)
 		image_remain -= 1

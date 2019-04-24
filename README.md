@@ -70,6 +70,20 @@ pyinstaller Alibaba-Scrapper.spec
 ```
 It will compile everything and build the executable into dist folder
 
+NOTE: Open Alibaba-Scrapper.spec files and change your directory to
+where you have downloaded the project
+
+- add the scripts folder of python,
+- add project root,
+
+```
+added_pathex = [
+            'C:\\Users\\Ana Ash\\Desktop\\skrapy2\\vnv\\Scripts',
+            'C:\\Users\\Ana Ash\\Desktop\\skrapy2\\project'
+]
+```
+
+Be sure to change this before building
 ## UI Inputs
 
 **URL**

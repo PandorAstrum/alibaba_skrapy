@@ -27,6 +27,7 @@ def vp_start_gui():
 	'''Starting point when module is the main routine.'''
 	global val, w, root
 	root = tk.Tk()
+	root.minsize(634, 360)
 	ui_support.set_Tk_var()
 	top = entire_app(root)
 	ui_support.init(root, top)
@@ -490,6 +491,11 @@ class entire_app:
 		self._user_agents = self.user_agents_entry.get()  # get user agents
 		self._delay = self.delya_entry.get()  # get delay settings
 
+		if len(self._previous_csv) <= 0 or self._previous_csv == "":
+			tmp_previous_csv = None
+		else:
+			tmp_previous_csv = self._previous_csv
+
 		if self._url == "":
 			messagebox.showinfo(message='URL is Missing')
 		else:
@@ -501,6 +507,7 @@ class entire_app:
 						output_dir=self._directory,
 						delay=self._delay,
 						category_check=self._category_check,
+						previous_csv = tmp_previous_csv,
 						update_fn=self.update_status), daemon=True).start()
 
 
