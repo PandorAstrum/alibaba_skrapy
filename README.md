@@ -48,47 +48,87 @@ pip install -r requirements.txt
     │   ├── pipelines.py                # pre processing stage
     │   └── settings.py                 # core settings fro the spider
     │
-    ├── downlaod_image.py               # contains logic for downloading image
-    ├── parameters.py                   # tweakable exposed parameter for the spider
-    └── run.py                          # main file to run (runs the spider)
+    ├── hooks(folder)                   # Hooks for building scrapy into executable
+    │   └── hook-scrapy.py              # scrapy hooks file
+    │
+    ├── ui.py                           # main Logic for the UI
+    ├── ui_support.py                   # supporting variables for ui inputs
+    ├── scrapy.cfg                      # scrapy framework settings
+    └── run.py                          # run spider and download image functions
 
 ## Example Usage
 - on the cmd or bash cd to folder where this repo is downloaded and extracted
 - then type:
 ```
-python run.py
+python ui_support.py
 ```
-It will start running the scrapper and upon finish you can check the root project folder for the output file
+It will start running the UI along with all function ready to use
 
-- to download images type:
+- for building into an executable for windows, type:
 ```
-python download_image.py
+pyinstaller Alibaba-Scrapper.spec
 ```
-## Tweak
-* in the parameters.py
+It will compile everything and build the executable into dist folder
 
-**URLS**
+## UI Inputs
+
+**URL**
 ```cs
-This is a list of urls that the spider will scrap from alibaba
+Provide an url to scrap <string>
 ```
-Change it according to your needs (one or many)
+Change it according to your needs
 <br>
 
-**OUTPUT_FILENAME**
+**OUTPUT FILE NAME**
 ```cs
-This is the file name that will be written along with date upon scrapping finish
+Provide a name for the output file <string>
 ```
 Change the name according to your needs
 <br>
 
-**CSV_FILE_FOR_IMAGE_DOWNLOAD**
+**ONLY GET CATEGORIES**
 ```cs
-This is the file name of scrapped csv file with full path to get the
-list of image links for download
+Checkmarks to get either data or categories
+```
+Check on or off according to your needs
+<br>
+
+**OUTPUT FOLDER**
+```cs
+Browse a directory to store the final result
+```
+e.g: "C:\\Users\\Username\\Desktop\\project\\"
+NOTE: anywhere in C drive is preferred
+<br>
+
+**PREVIOUS CSV (OPTIONAL)**
+```cs
+Location of previously scrapped csv files
 ```
 e.g: "C:\\Users\\Username\\Desktop\\project\\scrapped_Apr_05_2019_15_41_32.csv"
-NOTE: dont forget the double slash to escape characters in python
 <br>
+
+**USER AGENTS**
+```cs
+User Agents for each request <string>
+```
+NOTE: It is set by default. Dont change until you google about user agents.
+<br>
+
+**DELAY**
+```cs
+Delay number between each request <int>
+```
+NOTE: by default its 0 (zero). Only put numbers here
+<br>
+
+**CSV FILES CONTAINS "images_links"**
+```cs
+Location of the file having tha column name "images_links"
+```
+e.g: "C:\\Users\\Username\\Desktop\\project\\scrapped_Apr_05_2019_15_41_32.csv"
+<br>
+
 
 ## Release History
 

@@ -12,9 +12,9 @@ class AlibabaSpidersSpider(Spider):
 
     def __init__(self, **kwargs):
         super(AlibabaSpidersSpider, self).__init__(**kwargs)
-        self.start_urls = kwargs.get('_start_urls')
+        self.start_urls = [kwargs.get('_start_urls')]
         self.headers = kwargs.get('_headers')
-        self.take_categories = kwargs.get('_take_categories')
+        self.category_check = kwargs.get('_category_check')
         self.tmp_links = []
 
     def start_requests(self):
@@ -22,11 +22,50 @@ class AlibabaSpidersSpider(Spider):
             yield Request(url, headers={'User-Agent': self.headers})
 
     def parse(self, response):
-        if self.take_categories:
+        if self.category_check:
+            # item = AlibabaItem()
             # only scrap the categories
             catagories = response.xpath('//div[@class="mod-content"]//ul//li//a/text()').extract()
             # write to file
-            pass
+            all_sub_cat = response.xpath('//div[@module-title="productGroups"]/@module-data').extract_first()
+            all_sub_cat = all_sub_cat.replace('%', ',').replace('0', ',').replace('1', ',').replace('2', ',')
+            all_sub_cat = all_sub_cat.replace('3', ',').replace('4', ',').replace('5', ',').replace('6', ',')
+            all_sub_cat = all_sub_cat.replace('7', ',').replace('8', ',').replace('9', ',')
+            all_sub_cat_spit = all_sub_cat.split('Fproductgrouplist')
+            subs = []
+            for c in catagories:
+                if '&' in c:
+                    matching_category = c.replace('&', '_').replace(' ', '')
+                elif " " in c:
+                    matching_category = c.replace(' ', '_')
+                elif ',' in c:
+                    matching_category = c.replace(',', '').replace(' ', '_')
+                elif '/' in c:
+                    matching_category = c.replace('&', '').replace(',', '').replace(' ', '_')
+                else:
+                    matching_category = c
+
+                for indx, sub in enumerate(all_sub_cat_spit):
+                    if indx == 0:
+                        pass
+                    else:
+                        sub_cat = re.findall(r'([A-Z]\w+\.html)', sub)
+                        sub_cat[0] = sub_cat[0].replace('.html', '').replace('F', '', 1)
+                        yield {
+                            "Category": c,
+                            "Sub Category": sub_cat[0]
+                        }
+
+                    # subs.append(sub_cat[0])
+                    # yield {
+                    #     "Category": catagories,
+                    #     "Sub Categories": sub_cat[0]
+                    # }
+            # item['category'] = catagories
+            # item['sub_category'] = subs
+
+
+
         else:
             # get all the links
             links = response.xpath('//div[@class="product-info"]/div[@class="title"]/a/@href').extract()
@@ -138,7 +177,6 @@ class AlibabaSpidersSpider(Spider):
                 #     if "Â" in head:
                 #         head = head.replace("Â", "").strip()
                 #     tmp_description.append(head)
-
 
         item['description'] = tmp_description
         _all_pics_div = soup.find('div', {'class': 'module-detailBoothImage'})

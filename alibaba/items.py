@@ -20,3 +20,5 @@ class AlibabaItem(scrapy.Item):
     description = scrapy.Field()
     url = scrapy.Field()
     images_links = scrapy.Field()
+    category = scrapy.Field()
+    sub_category = scrapy.Field()

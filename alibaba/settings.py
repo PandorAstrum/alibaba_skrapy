@@ -93,6 +93,26 @@ FEED_FORMAT = "csv"
 FEED_EXPORTERS = {
     'csv': 'alibaba.exporter.FixLineCsvItemExporter',
 }
+FEED_STORAGES={
+    'c': 'scrapy.extensions.feedexport.FileFeedStorage',
+    'd': 'scrapy.extensions.feedexport.FileFeedStorage',
+    'e': 'scrapy.extensions.feedexport.FileFeedStorage',
+    'f': 'scrapy.extensions.feedexport.FileFeedStorage',
+    'g': 'scrapy.extensions.feedexport.FileFeedStorage',
+    'h': 'scrapy.extensions.feedexport.FileFeedStorage',
+    'i': 'scrapy.extensions.feedexport.FileFeedStorage',
+    'j': 'scrapy.extensions.feedexport.FileFeedStorage',
+    'k': 'scrapy.extensions.feedexport.FileFeedStorage',
+    'l': 'scrapy.extensions.feedexport.FileFeedStorage',
+    'm': 'scrapy.extensions.feedexport.FileFeedStorage',
+    'n': 'scrapy.extensions.feedexport.FileFeedStorage',
+    'o': 'scrapy.extensions.feedexport.FileFeedStorage',
+    'p': 'scrapy.extensions.feedexport.FileFeedStorage',
+    'q': 'scrapy.extensions.feedexport.FileFeedStorage',
+    'r': 'scrapy.extensions.feedexport.FileFeedStorage',
+    's': 'scrapy.extensions.feedexport.FileFeedStorage',
+    't': 'scrapy.extensions.feedexport.FileFeedStorage',
+}
 
 # LOG_LEVEL = 'INFO'
 # DELTAFETCH_RESET=True

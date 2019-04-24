@@ -5,8 +5,6 @@
 #  in conjunction with Tcl version 8.6
 #    Apr 12, 2019 11:38:40 PM +06  platform: Windows NT
 
-import sys
-
 try:
     import Tkinter as tk
 except ImportError:
@@ -25,10 +23,10 @@ def set_Tk_var():
     Put_URL_here = tk.StringVar()
     global che57
     che57 = tk.BooleanVar()
-    global useragentsvar
-    useragentsvar = tk.StringVar(value="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.3")
-    global delay
-    delay = tk.IntVar(0)
+    global user_agents_var
+    user_agents_var = tk.StringVar(value="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.3")
+    global delay_time
+    delay_time = tk.IntVar(0)
 
 
 def init(top, gui, *args, **kwargs):
@@ -37,11 +35,13 @@ def init(top, gui, *args, **kwargs):
     top_level = top
     root = top
 
+
 def destroy_window():
     # Function which closes the window.
     global top_level
     top_level.destroy()
     top_level = None
+
 
 if __name__ == '__main__':
     import ui

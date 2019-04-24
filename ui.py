@@ -3,10 +3,11 @@
 """__author__ = "Ashiquzzaman Khan"
 __desc__ = "UI file for the alibaba scrapper"
 """
-
-import sys
+import os
+import threading
 from tkinter import filedialog
-
+from tkinter import messagebox
+from run import run_scrapper, download_image
 try:
 	import Tkinter as tk
 except ImportError:
@@ -21,16 +22,20 @@ except ImportError:
 
 import ui_support
 
+
 def vp_start_gui():
 	'''Starting point when module is the main routine.'''
 	global val, w, root
 	root = tk.Tk()
 	ui_support.set_Tk_var()
-	top = entire_app (root)
+	top = entire_app(root)
 	ui_support.init(root, top)
 	root.mainloop()
 
+
 w = None
+
+
 def create_entire_app(root, *args, **kwargs):
 	'''Starting point when module is imported by another program.'''
 	global w, w_win, rt
@@ -172,7 +177,7 @@ class entire_app:
 		self.output_folder_br_btn.configure(pady="0")
 		self.output_folder_br_btn.configure(text='''Browse''')
 		self.output_folder_br_btn.configure(width=117)
-		self.output_folder_br_btn.configure(command=self.browsedir)
+		self.output_folder_br_btn.configure(command=self.browse_dir)
 		# output folder path label
 		self.label_out_folder_label = tk.Label(self.basic_label_frame)
 		self.label_out_folder_label.place(relx=0.416, rely=0.515, height=31, width=71, bordermode='ignore')
@@ -194,7 +199,7 @@ class entire_app:
 		self.out_folder_selected_label.configure(foreground="#000000")
 		self.out_folder_selected_label.configure(highlightbackground="#d9d9d9")
 		self.out_folder_selected_label.configure(highlightcolor="black")
-		self.out_folder_selected_label.configure(text='''None''')
+		self.out_folder_selected_label.configure(text=os.getcwd())
 		self.out_folder_selected_label.configure(width=281)
 
 		# previous csv label
@@ -222,7 +227,7 @@ class entire_app:
 		self.pre_csv_br_btn.configure(pady="0")
 		self.pre_csv_br_btn.configure(text='''Browse''')
 		self.pre_csv_br_btn.configure(width=117)
-		self.pre_csv_br_btn.configure(command=self.browsecsvfile)
+		self.pre_csv_br_btn.configure(command=self.browse_previous_csv_file)
 		# previous csv name label
 		self.label_pre_selected_label = tk.Label(self.basic_label_frame)
 		self.label_pre_selected_label.place(relx=0.416, rely=0.727, height=31, width=91, bordermode='ignore')
@@ -279,7 +284,7 @@ class entire_app:
 		self.user_agents_entry.configure(foreground="#000000")
 		self.user_agents_entry.configure(insertbackground="black")
 		self.user_agents_entry.configure(width=194)
-		self.user_agents_entry.configure(textvariable=ui_support.useragentsvar)
+		self.user_agents_entry.configure(textvariable=ui_support.user_agents_var)
 		ToolTip(self.user_agents_entry, tooltip_font, '''Change User Agents Here''', delay=0.5)
 
 		# delay label
@@ -303,7 +308,7 @@ class entire_app:
 		self.delya_entry.configure(foreground="#000000")
 		self.delya_entry.configure(insertbackground="black")
 		self.delya_entry.configure(width=194)
-		self.delya_entry.configure(textvariable=ui_support.delay)
+		self.delya_entry.configure(textvariable=ui_support.delay_time)
 		ToolTip(self.delya_entry, tooltip_font, '''Change Request Delay to Alibaba Here''', delay=0.5)
 
 		# Image Settings ========================================================
@@ -342,7 +347,7 @@ class entire_app:
 		self.img_csv_br_btn.configure(pady="0")
 		self.img_csv_br_btn.configure(text='''Browse''')
 		self.img_csv_br_btn.configure(width=87)
-		self.img_csv_br_btn.configure(command=self.browseimagecsvfiles)
+		self.img_csv_br_btn.configure(command=self.browse_image_csv_file)
 		# image csv file name label
 		self.label_img_csv_selected_label = tk.Label(self.image_dl_frame)
 		self.label_img_csv_selected_label.place(relx=0.067, rely=0.345, height=31, width=71, bordermode='ignore')
@@ -378,9 +383,9 @@ class entire_app:
 		self.status_frame.configure(highlightbackground="#d9d9d9")
 		self.status_frame.configure(highlightcolor="black")
 		self.status_frame.configure(width=620)
-		# editable status laebl
+		# editable status label
 		self.remaining_label = tk.Label(self.status_frame)
-		self.remaining_label.place(relx=0.016, rely=0.349, height=21, width=610, bordermode='ignore')
+		self.remaining_label.place(relx=0.01, rely=0.349, height=21, width=600, bordermode='ignore')
 		self.remaining_label.configure(activebackground="#f9f9f9")
 		self.remaining_label.configure(activeforeground="black")
 		self.remaining_label.configure(background="#d9d9d9")
@@ -407,7 +412,7 @@ class entire_app:
 		self.download_img_btn.configure(pady="0")
 		self.download_img_btn.configure(text='''Download Image''')
 		self.download_img_btn.configure(width=197)
-		self.download_img_btn.configure(command=self.downloadimages)
+		self.download_img_btn.configure(command=self.download_images)
 		# download data buttons
 		self.download_data_btn = tk.Button(top)
 		self.download_data_btn.place(relx=0.055, rely=0.75, height=34, width=257)
@@ -421,57 +426,142 @@ class entire_app:
 		self.download_data_btn.configure(pady="0")
 		self.download_data_btn.configure(text='''Download Data''')
 		self.download_data_btn.configure(width=257)
-		self.download_data_btn.configure(command=self.downloaddata)
+		self.download_data_btn.configure(command=self.download_data)
+		# Cancel Button
+		self.cancel_btn = tk.Button(self.status_frame)
+		self.cancel_btn.place(relx=0.82, rely=-0.2, height=26, width=100)
+		# relx = 0.016, rely = 0.349, height = 21, width = 610, bordermode = 'ignore'
+		self.cancel_btn.configure(activebackground="#ececec")
+		self.cancel_btn.configure(activeforeground="#000000")
+		self.cancel_btn.configure(background="#d9d9d9")
+		self.cancel_btn.configure(disabledforeground="#a3a3a3")
+		self.cancel_btn.configure(foreground="#000000")
+		self.cancel_btn.configure(highlightbackground="#d9d9d9")
+		self.cancel_btn.configure(highlightcolor="black")
+		self.cancel_btn.configure(pady="0")
+		self.cancel_btn.configure(text='''Refresh App''')
+		self.cancel_btn.configure(width=257)
+		self.cancel_btn.configure(command=self.cancel)
+		self.cancel_btn.configure(state="disabled")
 
 	# Custom Functions for the UI ==================================================================
-	def browsecsvfile(self):
-		csvfilename = filedialog.askopenfilename(title="Select A File",
+	def browse_previous_csv_file(self):
+		"""
+		browse the csv file from computer and get the path + name also update the editable label
+		:return:
+		"""
+		_csvFileName = filedialog.askopenfilename(title="Select A File",
 												filetype=(("csv", "*.csv"), ("All Files", "*.*")))
-		self._previous_csv = csvfilename
-		_fileName = csvfilename.rsplit("/", -1)[-1]
+		self._previous_csv = _csvFileName
+		_fileName = _csvFileName.rsplit("/", -1)[-1]
 		self.pre_selected_selected_label.configure(text=_fileName)  # update editable label
 
-	def browsedir(self):
-		self._directory = filedialog.askdirectory(title="Select A Directory")
-		self.out_folder_selected_label.configure(text=self._directory)  # update editable label
+	def browse_dir(self):
+		"""
+		browse the directory from computer <path> also update the editable label
+		:return:
+		"""
+		self._directory = filedialog.askdirectory(title="Select A Directory", initialdir=os.getcwd())
+		if len(self._directory) > 0:
+			tmp = self._directory
+		else:
+			tmp = os.getcwd()
+		self.out_folder_selected_label.configure(text=tmp)  # update editable label
 
-	def browseimagecsvfiles(self):
-		csvfilename = filedialog.askopenfilename(title="Select A File",
+	def browse_image_csv_file(self):
+		"""
+		browse the csv file from computer and get the path + name also update the editable label
+		:return:
+		"""
+		_csvFileName = filedialog.askopenfilename(title="Select A File",
 												filetype=(("csv", "*.csv"), ("All Files", "*.*")))
-		self.image_csv = csvfilename
-		_fileName = csvfilename.rsplit("/", -1)[-1]
+		self.image_csv = _csvFileName
+		_fileName = _csvFileName.rsplit("/", -1)[-1]
 		self.img_csv_selected_label.configure(text=_fileName)
 
-	def downloaddata(self):
-		# take the url
-		self._url = self.url_entry.get()
-		# take settings
-		self._category_check = ui_support.che57.get()  # Take Category check
-		self._directory = self.out_folder_selected_label.cget("text")  # take directory to dump
-		self._filename = self.output_folder_entry.get()  # get filename
+	def download_data(self):
 
-		# prepare file name _directory + _filename
+		self.remaining_label.configure(text=self._delay)
+		# Take Settings
+		self._url = self.url_entry.get()  # take url
+		self._category_check = ui_support.che57.get()  # Take Category check
+		self._filename = self.output_folder_entry.get()  # get filename
+		self._directory = self.out_folder_selected_label.cget("text")  # take directory to dump
 		self._user_agents = self.user_agents_entry.get()  # get user agents
 		self._delay = self.delya_entry.get()  # get delay settings
 
-		# start scraping
-		# update stats periodically
-		self.remaining_label.configure(text=self._delay)
-		# TODO: disable all
-		# TODO: Take Settings
-		# TODO: Feed The parameters and call run scrapper
+		if self._url == "":
+			messagebox.showinfo(message='URL is Missing')
+		else:
+			# disable everything
+			self.freeze_all()
+			threading.Thread(target=run_scrapper(urls=self._url,
+						header=self._user_agents,
+						output_file_name=self._filename,
+						output_dir=self._directory,
+						delay=self._delay,
+						category_check=self._category_check,
+						update_fn=self.update_status), daemon=True).start()
 
-	def downloadimages(self):
-		# load the csv file
-		# take the images_links column
-		# start download
-		# update stats periodically
 
-		pass
+	# def download_images(self):
+	# 	loop = asyncio.get_event_loop()
+	# 	try:
+	# 		loop.run_until_complete(self.download_images_async())
+	# 	finally:
+	# 		loop.close()
 
-	def updatestatus(self):
-		pass
+	def download_images(self):
 
+		# Take Settings
+		self._directory = self.out_folder_selected_label.cget("text")
+		if len(self.image_csv) <= 0 or self.image_csv == "":
+			messagebox.showerror(title="Error", message="No file selected")
+		else:
+
+			# disable all
+			self.freeze_all()
+			root.update_idletasks()
+			# run download images
+			download_image(_fn=self.update_status,
+							_csv_file=self.image_csv,
+							_output_folder=self._directory)
+			root.update_idletasks()
+
+	def cancel(self):
+		self.unfreeze_all()
+		root.destroy()
+		vp_start_gui()
+
+	def update_status(self, _str=""):
+		self.remaining_label.configure(text=_str)
+		root.update_idletasks()
+
+	def freeze_all(self):
+		self.download_data_btn["state"] = "disabled"
+		self.download_img_btn["state"] = "disabled"
+		self.img_csv_br_btn["state"] = "disabled"
+		self.output_folder_br_btn["state"] = "disabled"
+		self.pre_csv_br_btn["state"] = "disabled"
+		self.url_entry["state"] = "disabled"
+		self.output_folder_entry["state"] = "disabled"
+		self.cat_chkbx["state"] = "disabled"
+		self.user_agents_entry["state"] = "disabled"
+		self.delya_entry["state"] = "disabled"
+		self.cancel_btn["state"] = "normal"
+
+	def unfreeze_all(self):
+		self.download_data_btn["state"] = "normal"
+		self.download_img_btn["state"] = "normal"
+		self.img_csv_br_btn["state"] = "normal"
+		self.output_folder_br_btn["state"] = "normal"
+		self.pre_csv_br_btn["state"] = "normal"
+		self.url_entry["state"] = "normal"
+		self.output_folder_entry["state"] = "normal"
+		self.cat_chkbx["state"] = "normal"
+		self.user_agents_entry["state"] = "normal"
+		self.delya_entry["state"] = "normal"
+		self.cancel_btn["state"] = "disabled"
 # ======================================================
 # Modified by Rozen to remove Tkinter import statements and to receive
 # the font as an argument.
@@ -480,7 +570,9 @@ class entire_app:
 # http://code.activestate.com/recipes/576688-tooltip-for-tkinter/
 # ======================================================
 
+
 from time import time, localtime, strftime
+
 
 class ToolTip(tk.Toplevel):
     """
@@ -591,6 +683,7 @@ class ToolTip(tk.Toplevel):
 # ===========================================================
 #                   End of Class ToolTip
 # ===========================================================
+
 
 if __name__ == '__main__':
     vp_start_gui()
