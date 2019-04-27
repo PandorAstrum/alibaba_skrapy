@@ -74,7 +74,9 @@ class AlibabaSpidersSpider(Spider):
 
         else:
             # get all the links
-            links = response.xpath('//div[@class="product-info"]/div[@class="title"]/a/@href').extract()
+            _div = response.xpath('//div[@class="module-product-list"]')
+
+            links = _div.xpath('.//div[@class="product-info"]/div[@class="title"]/a/@href').extract()
             # process and remove extra links
             for link in links:
                 if link not in self.tmp_links:
@@ -84,7 +86,6 @@ class AlibabaSpidersSpider(Spider):
             # next
             next_page_url = response.xpath('//div[@class="next-pagination-list"]/a/@href').extract()
             for next_page in next_page_url:
-
                 if next_page:
                     abs_next_page_url = response.urljoin(next_page)
                     yield Request(abs_next_page_url, callback=self.parse, headers={'User-Agent': self.headers})
@@ -150,8 +151,10 @@ class AlibabaSpidersSpider(Spider):
                     # get temp descriptions
                     for _description in _all_description:
                         _d = _description.prettify().replace('\n', '')
-                        _d = ''.join(c for c in _d if ord(c) < 128)
-                        tmp_description.append(_d)
+                        if "<img" not in _d:
+                            _d = ''.join(c for c in _d if ord(c) < 128)
+                            # dump any image
+                            tmp_description.append(_d)
 
                     index_of_related_products = 0
                     # find related products
@@ -163,6 +166,8 @@ class AlibabaSpidersSpider(Spider):
                             index_of_related_products = len(tmp_description) + 1
                     # slicing only take upto related products clean
                 _final_desc = tmp_description[:index_of_related_products]
+                # joining list elements into one string
+                _joined_string_description = ''.join(_final_desc)
 
             else:
                 _all_description = _desc.findAll('p')
@@ -176,8 +181,10 @@ class AlibabaSpidersSpider(Spider):
                     # get into a list
                     for _description in _all_description:
                         _d = _description.prettify().replace('\n', '')
-                        _d = ''.join(c for c in _d if ord(c) < 128)
-                        tmp_description.append(_d)
+                        if "<img" not in _d:
+                            _d = ''.join(c for c in _d if ord(c) < 128)
+                        # dump any image
+                            tmp_description.append(_d)
 
                     index_of_related_products = 0
                     # find related products
@@ -189,7 +196,9 @@ class AlibabaSpidersSpider(Spider):
                             index_of_related_products = len(tmp_description) + 1
                         # clean
                 _final_desc = tmp_description[:index_of_related_products]
-            item['description'] = _final_desc
+                # joining list elements into one string
+                _joined_string_description = ''.join(_final_desc)
+            item['description'] = _joined_string_description
             _all_pics_div = soup.find('div', {'class': 'module-detailBoothImage'})
             _all_pic = _all_pics_div.findAll('img')
             _all_pic.pop(0)
@@ -259,8 +268,10 @@ class AlibabaSpidersSpider(Spider):
                         # get temp descriptions
                         for _description in _all_description:
                             _d = _description.prettify().replace('\n', '')
-                            _d = ''.join(c for c in _d if ord(c) < 128)
-                            tmp_description.append(_d)
+                            if "<img" not in _d:
+                                _d = ''.join(c for c in _d if ord(c) < 128)
+                                # dump any image
+                                tmp_description.append(_d)
 
                         index_of_related_products = 0
                         # find related products
@@ -272,7 +283,8 @@ class AlibabaSpidersSpider(Spider):
                                 index_of_related_products = len(tmp_description) + 1
                         # slicing only take upto related products clean
                     _final_desc = tmp_description[:index_of_related_products]
-
+                    # joining list elements into one string
+                    _joined_string_description = ''.join(_final_desc)
                 else:
                     _all_description = _desc.findAll('p')
                     if len(_all_description) == 0:
@@ -285,8 +297,10 @@ class AlibabaSpidersSpider(Spider):
                         # get into a list
                         for _description in _all_description:
                             _d = _description.prettify().replace('\n', '')
-                            _d = ''.join(c for c in _d if ord(c) < 128)
-                            tmp_description.append(_d)
+                            if "<img" not in _d:
+                                _d = ''.join(c for c in _d if ord(c) < 128)
+                                # dump any image
+                                tmp_description.append(_d)
 
                         index_of_related_products = 0
                         # find related products
@@ -298,7 +312,9 @@ class AlibabaSpidersSpider(Spider):
                                 index_of_related_products = len(tmp_description) + 1
                             # clean
                     _final_desc = tmp_description[:index_of_related_products]
-                item['description'] = _final_desc
+                    # joining list elements into one string
+                    _joined_string_description = ''.join(_final_desc)
+                item['description'] = _joined_string_description
                 _all_pics_div = soup.find('div', {'class': 'module-detailBoothImage'})
                 _all_pic = _all_pics_div.findAll('img')
                 _all_pic.pop(0)

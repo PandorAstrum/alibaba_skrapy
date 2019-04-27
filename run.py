@@ -4,12 +4,15 @@ __author__ = "Ashiquzzaman Khan"
 __desc__ = "This file contains the mechanism for spider run or download images"
 """
 from datetime import datetime
-from multiprocessing import Process
+from crochet import setup
 import pandas as pd
 import requests
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from alibaba.spiders import alibaba_spiders
+
+setup()
+
 
 
 def get_curr_date_time(strft="%b_%d_%Y_%H_%M_%S"):
@@ -60,12 +63,23 @@ def run_scrapper(**kwargs):
 		_previous_list = []
 	else:
 		_prev = True
-		_previous_list = get_pandas_column(_previous_csv, "url")
-
+		df = pd.read_csv(_previous_csv)
+		_previous_list = df["url"].to_list()
 	_update_fn(_str="Scrapping Data")
-	process = Process(target=crawl, args=(output, _delay, _urls, _header, _category_check, _prev, _previous_list))
-	process.start()
-	process.join()
+	_project_settings = get_project_settings()
+	crawler = CrawlerProcess(_project_settings)
+	crawler.settings.update({
+		'FEED_URI': output,
+		'FEED_FORMAT': "csv",
+		'LOG_LEVEL': 'INFO',
+		"DELAY": _delay
+	})
+	crawler.crawl(alibaba_spiders.AlibabaSpidersSpider, _start_urls=_urls, _headers=_header,
+	              _category_check=_category_check, _previous_list=_previous_list, _prev=_prev)
+	# crawler.start()  # the script will block here until the crawling is finished
+	# process = Process(target=crawl, args=(output, _delay, _urls, _header, _category_check, _prev, _previous_list))
+	# process.start()
+	# process.join()
 
 
 def download_image(_fn, _csv_file, _output_folder):
