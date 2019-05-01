@@ -57,7 +57,7 @@ def run_scrapper(**kwargs):
 	_previous_csv = kwargs.get("previous_csv")
 	# preprocess parameters
 	output = get_output_filename(_name=_output_dir + "/" + _output_file_name)
-
+	output = "file:///" + output
 	if _previous_csv is None:
 		_prev = False
 		_previous_list = []
@@ -74,8 +74,7 @@ def run_scrapper(**kwargs):
 		'LOG_LEVEL': 'INFO',
 		"DELAY": _delay
 	})
-	crawler.crawl(alibaba_spiders.AlibabaSpidersSpider, _start_urls=_urls, _headers=_header,
-	              _category_check=_category_check, _previous_list=_previous_list, _prev=_prev)
+	crawler.crawl(alibaba_spiders.AlibabaSpidersSpider, _start_urls=_urls, _headers=_header, _category_check=_category_check, _previous_list=_previous_list, _prev=_prev)
 	# crawler.start()  # the script will block here until the crawling is finished
 	# process = Process(target=crawl, args=(output, _delay, _urls, _header, _category_check, _prev, _previous_list))
 	# process.start()
